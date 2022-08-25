@@ -22,4 +22,4 @@ def greet(message):
 def help(message):
     bot.send_message(message.chat.id, "Not yet used ma boy")
 
-bot.polling()
+bot.polling() 
