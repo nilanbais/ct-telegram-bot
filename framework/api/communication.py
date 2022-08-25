@@ -12,7 +12,7 @@ class APICommunicator:
 
     def __init__(self, implemented_api: AbstractAPI) -> None:
         self.api = implemented_api
-        self.__auth_object = Authenticator(api_name=implemented_api.name)
+        self.__auth_object = Authenticator(implemented_api)
 
     def connect_to_endpoint(self) -> dict:
         """Method to connect to the endpoint of the implemented api"""
