@@ -5,7 +5,7 @@ from framework.interface.api_interface import AbstractAPI
 class TwitterAPI(AbstractAPI):
 
     def __init__(self) -> None:
-        self._name:str = "twitter-api"
+        self._name:str = "twitter"
         self._authentication_type:str = 'bearer_token'
         self._header = None
         self._url = None

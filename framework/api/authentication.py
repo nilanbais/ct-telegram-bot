@@ -49,21 +49,10 @@ class RapidApiAuth(AbstractAuthenticationObject):
         return work_header
 
 
-def __get_auth_object(implemented_api: AbstractAPI) -> AbstractAuthenticationObject:
-    """ """
-    # check if the value is not None
-    no_none_values(auth_type=implemented_api.authentication_type)
-    # get name of env key var of the api
-    __key_var_name = clean_api_name_string(name_sting=implemented_api.name, usage='api-key')
-    # get specific authentication object
-    if implemented_api.authentication_type == 'rapid_api':
-        return RapidApiAuth(__key_var_name)
-
-
 class Authenticator:
 
     def __init__(self, implemented_api: AbstractAPI) -> None:
-        self.__authentication_object: AbstractAuthenticationObject = __get_auth_object(authentication_type=implemented_api.authentication_type)
+        self.__authentication_object: AbstractAuthenticationObject = self.__get_auth_object(implemented_api)
 
     def get_authorised_header(self, header: dict) -> dict:
         """Method to auterise the header.
@@ -71,3 +60,15 @@ class Authenticator:
         """
         authed_header = self.__authentication_object.get_authed_header(header)
         return authed_header
+
+    def __get_auth_object(self, implemented_api: AbstractAPI) -> AbstractAuthenticationObject:
+        """ """
+        # check if the value is not None
+        no_none_values(auth_type=implemented_api.authentication_type)
+        # get name of env key var of the api
+        __key_var_name = clean_api_name_string(name_sting=implemented_api.name, usage='api-key')
+        # get specific authentication object
+        if implemented_api.authentication_type == 'rapid_api':
+            return RapidApiAuth(__key_var_name)
+        elif implemented_api.authentication_type == 'bearer_token':
+            return BearerOAuth(__key_var_name)
