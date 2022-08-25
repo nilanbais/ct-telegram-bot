@@ -1,6 +1,6 @@
 from psycopg2.errors import DuplicateTable
 
-from bot_framework.database import DatabaseConnection
+from framework.database import DatabaseConnection
 
 
 class DatabaseCursor:
