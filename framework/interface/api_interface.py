@@ -51,16 +51,20 @@ class AbstractAPI(ABC):
         """Method to prepare the request objects. This method needs to be called at initialization"""
         ...
     
+    @header.setter
     @abstractmethod
-    def _get_header(self) -> dict:
+    def header(self) -> dict:
         """Private method used to build and return the header object"""
         ...
 
+    @url.setter
     @abstractmethod
-    def _get_url(self) -> str:
+    def url(self) -> str:
         """Private method used to build and return the url object"""
         ...
 
-    def _get_query_parameters(self) -> dict:
+    @query_parameters.setter
+    @abstractmethod
+    def query_parameters(self) -> dict:
         """Private method used to build and return the query_parameters object"""
         ...
