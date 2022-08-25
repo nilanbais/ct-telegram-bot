@@ -1,5 +1,7 @@
 from typing import Optional
 
+from requests import Response
+
 class APIExceptions:
 
     @staticmethod
@@ -10,7 +12,7 @@ class APIExceptions:
             )
     
     @staticmethod
-    def check_response_status(response) -> Optional[ValueError]:
+    def check_response_status(response: Response) -> Optional[ValueError]:
         """
         check the response code
         """
