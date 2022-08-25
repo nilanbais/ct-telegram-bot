@@ -1,9 +1,9 @@
 
 import os
-from typing import Protocol
-from abc import ABC, abstractmethod
+from abc import ABC
 
 import dotenv
+
 
 PROJECT_NAME = 'ct-telegram-bot'
 
@@ -36,6 +36,7 @@ def get_env_folder_path() -> str:
     return os.path.join(project_root, 'env')
 
 
+
 class VarReaderBase(ABC):
 
     def __init__(self, env_file: str) -> None:
@@ -49,13 +50,16 @@ class VarReaderBase(ABC):
     def get_value(self, variable_name: str) -> str:
         return self._config[variable_name]
 
+
 class DBVarReader(VarReaderBase):
     def __init__(self) -> None:
         super().__init__(env_file='db.env')
 
+
 class APIVarReader(VarReaderBase):
     def __init__(self) -> None:
         super().__init__(env_file='api.env')
+
 
 class BotVarReader(VarReaderBase):
     def __init__(self) -> None:
@@ -64,8 +68,6 @@ class BotVarReader(VarReaderBase):
 
 
 class EnvVarReader:
-    def __init__(self) -> None:
-        pass
 
     def get_value(self, variable_name: str) -> str:
         reader_object:VarReaderBase = self._get_reader_object(variable_name)
@@ -79,8 +81,3 @@ class EnvVarReader:
             return DBVarReader()
         elif var_prefix.lower() == 'api':
             return APIVarReader()
-
-if __name__ == '__main__':
-    p = os.path.abspath(__file__)
-    print(p)
-    get_project_root(p)

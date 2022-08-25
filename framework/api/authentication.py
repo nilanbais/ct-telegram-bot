@@ -1,10 +1,10 @@
 
 from typing import Union
 from abc import ABC, abstractmethod
-from  interfaces.api_interface import AbstractAPI
+from framework.interface.api_interface import AbstractAPI
 
-from source_utils.code_utils import get_authentication_variable, get_api_config_variable, clean_api_name_string
-from exceptions_handling import no_none_values
+from framework.framework_utils.code_utils import get_authentication_variable, get_api_config_variable, clean_api_name_string
+from framework.exception_handling import no_none_values
 
 
 class AbstractAuthenticationObject(ABC):

@@ -3,9 +3,9 @@ Objects related to the general communication between a system and an api
 """
 import requests
 
-from api.authentication import Authenticator
-from api.exceptions import APIExceptions
-from interfaces.api_interface import AbstractAPI
+from framework.api.authentication import Authenticator
+from framework.api.exceptions import APIExceptions
+from framework.interface.api_interface import AbstractAPI
 
 
 class APICommunicator:

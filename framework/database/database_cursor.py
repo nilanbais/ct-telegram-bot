@@ -103,3 +103,23 @@ class MongoDBCursor:
         self._prepare_crud_ops(database_name, collection_name)
         query_result = self._connector.collection.find(query_documents)
         return query_result
+
+    def delete_many_documents(self, collection_name: str, query: dict) -> None:
+        """Private method to delete the queried documents from the given collection.
+        """
+        self._prepare_crud_ops(collection_name=collection_name)
+        self._connector.collection.delete_many(query)
+
+    def _empty_collection(self, collection_name: str) -> None:
+        """Private method to empty a given collection from the cta_databse.
+        """
+        user_input = input(f"{'-'*20}WARING{'-'*20}\nYou're about the empty the collection {collection_name}.\nDo you want to proceed? y/n\n")
+        if user_input in ['y', 'yes']:
+            self.delete_many_documents(collection_name=collection_name, 
+                                       query={})
+            print("Done my dude")
+        elif user_input in ['n', 'no']:
+            print("Nothing happend. No worries.")
+        else:
+            print("I don't understand what you mean so I'm aborting the mission.")
+            
