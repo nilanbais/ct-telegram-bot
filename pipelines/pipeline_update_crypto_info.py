@@ -12,8 +12,6 @@ from framework.api.communication import APICommunicator
 from framework.database import MongoDBConnection, MongoDBCursor
 
 
-pipeline = Pipeline()
-
 api = APICommunicator(CoinMarketCapAPI())
 mongodb = MongoDBCursor(MongoDBConnection())
 
