@@ -56,11 +56,6 @@ def insert_list_into_db(input_list: List[dict]) -> None:
         print("going for update")
 
         que = input_list.copy()
-        que.append({'followers_count': 5864,
-                            'id': '22365856',
-                            'name': 'test',
-                            'username': 'test'})
-
         for _ in range(len(input_list)):
             item = que[-1]
             query = {"name": item['name']}

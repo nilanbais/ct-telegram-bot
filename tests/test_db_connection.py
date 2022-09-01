@@ -9,6 +9,10 @@ print(mongodb.database)
 
 list_collections = mongodb.get_collection_list()
 
-print(mongodb.select_one({}, collection_name='users'))
 
-[print(mongodb.select_one({}, collection_name=col_names)) for col_names in list_collections]
+result = mongodb.select_many({}, collection_name='crypto_currencies')
+
+print(type(result))
+for i in result:
+    print(i["name"])
+

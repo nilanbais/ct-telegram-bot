@@ -21,6 +21,6 @@ mongodb = MongoDBCursor(MongoDBConnection())
 
 @pipeline.task()
 def delete_users()-> None:
-    mongodb._empty_collection(collection_name='users')
+    mongodb._empty_collection(collection_name='crypto_currencies')
 
 pipeline.run()

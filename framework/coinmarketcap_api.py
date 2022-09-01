@@ -1,16 +1,15 @@
-"""https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/introduction
+"""https://coinmarketcap.com/api/documentation/v1/ 
 """
 from framework.framework_utils.env_reader import EnvVarReader
 from framework.interface.api_interface import AbstractAPI
 from framework.framework_utils.string_utils import var_name_from_name_str
 from framework.framework_utils.file_reader import read_json_file
 
-
-class TwitterAPI(AbstractAPI):
+class CoinMarketCapAPI(AbstractAPI):
 
     def __init__(self) -> None:
-        self._name:str = "twitter"
-        self._authentication_type:str = 'bearer_token'
+        self._name:str = "coinmarketcap"
+        self._authentication_type:str = 'api_key_header'
         self._header:dict = {}
         self._url:str = ""
         self._query_parameters:dict = {}
@@ -48,11 +47,9 @@ class TwitterAPI(AbstractAPI):
     @query_parameters.setter
     def query_parameters(self, new_query_parameters: dict):
         self._query_parameters = new_query_parameters
-
-
+    
     def prepare_request_objects(self, endpoint: str, header_kwargs: dict, query_parameters_kwargs: dict) -> None:
         self.url = self._get_url(endpoint)
-
         self.header = header_kwargs
         self.query_parameters = query_parameters_kwargs
 
@@ -60,8 +57,4 @@ class TwitterAPI(AbstractAPI):
         """Method to extract the url related to the given endpoint of the api"""
         API_ENDPOINT_FILE:str = EnvVarReader().get_value('API_ENDPOINTS_FILE')
         endpoint_base_url:str = read_json_file(json_file=API_ENDPOINT_FILE)[var_name_from_name_str(self.name, usage='endpoints')][endpoint]
-        return endpoint_base_url.format(self._get_user_id())
-
-    def _get_user_id(self) -> str:
-        TWITTER_USER_ID:str = EnvVarReader().get_value("TWITTER_USER_ID")
-        return TWITTER_USER_ID
+        return endpoint_base_url
