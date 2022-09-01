@@ -104,6 +104,10 @@ class MongoDBCursor:
         query_result = self._connector.collection.find(query_documents)
         return query_result
 
+    def update_one(self, query: dict, database_name:str = None, collection_name:str = None) -> None:
+        self._prepare_crud_ops(database_name, collection_name)
+        self._connector.collection.update_one(*query)
+    
     def delete_many_documents(self, collection_name: str, query: dict) -> None:
         """Private method to delete the queried documents from the given collection.
         """

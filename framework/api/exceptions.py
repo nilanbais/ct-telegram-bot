@@ -6,7 +6,7 @@ class APIExceptions:
 
     @staticmethod
     def raise_request_exception(**kwargs):
-        if None in kwargs.values:
+        if None in kwargs.values():
             raise Exception(
                 "No header, url, or parameter object created."
             )

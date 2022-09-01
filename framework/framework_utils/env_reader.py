@@ -1,5 +1,6 @@
 
 import os
+import json
 from abc import ABC
 
 import dotenv
@@ -40,12 +41,13 @@ def get_env_folder_path() -> str:
 class VarReaderBase(ABC):
 
     def __init__(self, env_file: str) -> None:
-        self.env_file = env_file
-        self.project_root = get_env_folder_path()
+        self.env_file:str = env_file
+        self.project_root:str = get_env_folder_path()
     
     @property
     def _config(self) -> dict:
         return dotenv.dotenv_values(os.path.join(self.project_root, self.env_file))
+            
 
     def get_value(self, variable_name: str) -> str:
         return self._config[variable_name]
@@ -65,6 +67,10 @@ class BotVarReader(VarReaderBase):
     def __init__(self) -> None:
         super().__init__(env_file='bot.env')
 
+class TwitterVarReader(VarReaderBase):
+    def __init__(self) -> None:
+        super().__init__(env_file='twitter.env')
+
 
 
 class EnvVarReader:
@@ -81,3 +87,5 @@ class EnvVarReader:
             return DBVarReader()
         elif var_prefix.lower() == 'api':
             return APIVarReader()
+        elif var_prefix.lower() == 'twitter':
+            return TwitterVarReader()

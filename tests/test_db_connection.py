@@ -9,4 +9,6 @@ print(mongodb.database)
 
 list_collections = mongodb.get_collection_list()
 
+print(mongodb.select_one({}, collection_name='users'))
+
 [print(mongodb.select_one({}, collection_name=col_names)) for col_names in list_collections]
