@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+
+  database:
+    container_name: pg_db_container
+    image: postgres:latest
+    build: 
+      context: ./docker_containers
+      dockerfile: ./postgres/Dockerfile
+    restart: always
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bot_database
+      PG_TRUST_LOCALNET: "True"
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker_containers/postgres/data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pg_admin_container
+    build:
+      context: ./docker_containers
+      dockerfile: ./pgadmin/Dockerfile
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - 5050:80
+    volumes:
+      - ./docker_containers/pgadmin/servers.json:/pgadmin4/servers.json
+      - ./docker_containers/pgadmin/pgpass:/pgadmin4/pgpass
+    depends_on:
+      - database
+
+  py_frame:
+    container_name: py_frame
+    build: 
+      context: .
+      dockerfile: ./docker_containers/py_frame/Dockerfile
+    restart: always
+    ports:
+      - 8088:80
+    volumes:
+      - ./bot_framework:/py_frame

@@ -6,3 +6,8 @@ venv
 
 # Cache
 __pycache__
+
+# docker stuff
+pgpass
+servers.json
+data
