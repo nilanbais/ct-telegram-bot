@@ -88,20 +88,20 @@ class MongoDBCursor:
 
         self._connector.collection.insert_many(documents)
 
-    def select_one(self, query_document: dict, database_name:str = None, collection_name:str = None) -> None:
+    def select_one(self, mongodb_query: dict, database_name:str = None, collection_name:str = None) -> None:
         """
         
         """
         self._prepare_crud_ops(database_name, collection_name)
-        query_result = self._connector.collection.find_one(query_document)
+        query_result = self._connector.collection.find_one(mongodb_query)
         return query_result
 
-    def select_many(self, query_documents: List[dict], database_name:str = None, collection_name:str = None) -> None:
+    def select_many(self, mongodb_query: List[dict], database_name:str = None, collection_name:str = None) -> None:
         """
         
         """
         self._prepare_crud_ops(database_name, collection_name)
-        query_result = self._connector.collection.find(query_documents)
+        query_result = self._connector.collection.find(mongodb_query)
         return query_result
 
     def update_one(self, query: dict, database_name:str = None, collection_name:str = None) -> None:

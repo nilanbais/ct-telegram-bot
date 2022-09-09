@@ -43,11 +43,11 @@ def clean_result(input_data: List[dict]) -> List[dict]:
     return clean_result
 
 
-@update_crypto_symbols.task(depends_on=clean_result)
-def pprint_result(input_data: List[dict]) -> None:
-    """Pritty prints some shit
-    """
-    pprint(input_data[:5])
+# @update_crypto_symbols.task(depends_on=clean_result)
+# def pprint_result(input_data: List[dict]) -> None:
+#     """Pritty prints some shit
+#     """
+#     pprint(input_data[:5])
 
 
 @update_crypto_symbols.task(depends_on=clean_result)
@@ -70,9 +70,13 @@ def insert_list_into_db(input_list: List[dict], update_all:bool = False) -> None
                 que.pop()
         else:
             result = mongodb.select_many({}, collection_name='crypto_currencies')
-            to_do_list = [item for item in result if item["symbol"] not in [obj["symbol"] for obj in input_list]]
-            print(to_do_list)
+            symbols_in_db = [obj["symbol"] for obj in result]
+            
+            _to_do_list = [item for item in input_list if item["symbol"] not in symbols_in_db]
 
+            keys_list =  ['id', 'name', 'symbol']
+            to_do_list = [{key: item[key] for key in item.keys() if key in keys_list} for item in _to_do_list]
+            # print(to_do_list)
             print("going add only new ones")
 
             if len(to_do_list) == 0:
