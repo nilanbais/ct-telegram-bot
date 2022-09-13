@@ -14,9 +14,9 @@ class APICommunicator:
         self.api = implemented_api
         self.__auth_object = Authenticator(implemented_api)
 
-    def connect_to_endpoint(self, endpoint: str, header_kwargs: dict = {}, query_parameters_kwargs: dict = {}) -> dict:
+    def connect_to_endpoint(self, endpoint: str, header_kwargs: dict = {}, query_parameters_kwargs: dict = {}, **kwargs) -> dict:
         """Method to connect to the endpoint of the implemented api"""
-        self.api.prepare_request_objects(endpoint, header_kwargs, query_parameters_kwargs)
+        self.api.prepare_request_objects(endpoint, header_kwargs, query_parameters_kwargs, **kwargs)
         autherised_object: AbstractAPI = self.__auth_object.autherise_object(self.api)
 
         APIExceptions().raise_request_exception(header=autherised_object.header, url=autherised_object.url, query_parameters=autherised_object.query_parameters)

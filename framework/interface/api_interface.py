@@ -47,6 +47,6 @@ class AbstractAPI(ABC):
         ...
     
     @abstractmethod
-    def prepare_request_objects(self, endpoint: str, header_kwargs: dict, query_parameters_kwargs: dict) -> None:
+    def prepare_request_objects(self, endpoint: str, header_kwargs: dict, query_parameters_kwargs: dict, **kwargs) -> None:
         """Method to prepare the request objects. This method needs to be called at initialization"""
         ...
