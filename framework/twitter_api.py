@@ -2,7 +2,7 @@
 """
 from framework.framework_utils.env_reader import EnvVarReader
 from framework.interface.api_interface import AbstractAPI
-from framework.framework_utils.string_utils import var_name_from_name_str
+from framework.framework_utils.string_utils import CustomFormatter, var_name_from_name_str
 from framework.framework_utils.file_reader import read_json_file
 
 
@@ -50,8 +50,13 @@ class TwitterAPI(AbstractAPI):
         self._query_parameters = new_query_parameters
 
 
-    def prepare_request_objects(self, endpoint: str, header_kwargs: dict, query_parameters_kwargs: dict) -> None:
+    def prepare_request_objects(self, endpoint: str, header_kwargs: dict, query_parameters_kwargs: dict, **kwargs) -> None:
+
         self.url = self._get_url(endpoint)
+        if "user_id" in kwargs.keys():
+            self.url = CustomFormatter().format(self.url, **{"USER_ID": kwargs['user_id']})
+        else:
+            self.url.format(self._get_user_id())
 
         self.header = header_kwargs
         self.query_parameters = query_parameters_kwargs
@@ -60,7 +65,7 @@ class TwitterAPI(AbstractAPI):
         """Method to extract the url related to the given endpoint of the api"""
         API_ENDPOINT_FILE:str = EnvVarReader().get_value('API_ENDPOINTS_FILE')
         endpoint_base_url:str = read_json_file(json_file=API_ENDPOINT_FILE)[var_name_from_name_str(self.name, usage='endpoints')][endpoint]
-        return endpoint_base_url.format(self._get_user_id())
+        return endpoint_base_url  # Deleted formatting of base_user_id, need the same urls with other user_ids to look up their tweets
 
     def _get_user_id(self) -> str:
         TWITTER_USER_ID:str = EnvVarReader().get_value("TWITTER_USER_ID")

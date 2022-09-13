@@ -19,6 +19,8 @@ class APICommunicator:
         self.api.prepare_request_objects(endpoint, header_kwargs, query_parameters_kwargs, **kwargs)
         autherised_object: AbstractAPI = self.__auth_object.autherise_object(self.api)
 
+        # print(f"url of the endpoint = {autherised_object.url}")
+
         APIExceptions().raise_request_exception(header=autherised_object.header, url=autherised_object.url, query_parameters=autherised_object.query_parameters)
         
         response = requests.request("GET", 
@@ -27,7 +29,6 @@ class APICommunicator:
                                     params=autherised_object.query_parameters)
 
         APIExceptions().check_response_status(response)
-        print(type(response))
         return response.json()
 
     # property getters
