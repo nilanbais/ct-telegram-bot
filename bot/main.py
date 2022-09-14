@@ -23,15 +23,28 @@ bot = telebot.TeleBot(token=API_TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Whaddup famly, I'm under construction and not yet in use. Think of this as you personal safe space dude.")
+    t = """crypto_twitter_analysis_bot OUT NOW go and chat with the one and only best there is crypto bot for things you know I know so let's stop talking and go get this goldendrop on a tuesday morning type ass motherf*cker skrt what's good"""
+    extrended_t = t + '\n' + """
+/start
+/today
+/yesterday
+/last_week
+    """
+    bot.send_message(message.chat.id, extrended_t)
 
 @bot.message_handler(commands=['greet'])
 def greet(message):
     bot.reply_to(message=message, text="What's good fam")
 
-@bot.message_handler(commands=['help'])
+@bot.message_handler(commands=['help', 'menu'])
 def help(message):
-    bot.send_message(message.chat.id, "Not yet used ma boy")
+    t = """
+/start
+/today
+/yesterday
+/last_week
+    """
+    bot.send_message(message.chat.id, text=t)
 
 @bot.message_handler(commands=['today'])
 def today(message):
@@ -79,4 +92,29 @@ tenk U come again
     bot.reply_to(message=message, text=text)
 
 
-bot.polling() 
+@bot.message_handler(commands=['last_week'])
+def last_week(message):
+    raw_data = mongodb.select_one(mongodb_query={"name": "Weekly Summary"}, collection_name='raports')
+    data = {key: value for key, value in raw_data.items() if key != '_id'}
+    newline = '\n'
+    tab = '\t'
+
+    text = f"""
+    
+What is up. I've got one summary of last week for ypu, my friend
+
+{'-' * 20}
+{data['name']}
+{data["description"]}
+The dates summed up are: {data['days']}
+
+{newline.join([f"{key}{tab * 2}{val}" for key, val in data['data'].items()])}
+
+Thank you come again
+    """
+    bot.reply_to(message=message, text=text)
+
+
+if __name__ == '__main__':
+    print("crypto_twitter_analysis_bot OUT NOW go to telegram to chat with the one and only best there is crypto bot for things you know I know so let's stop talking and go get this goldendrop on a tuesday morning type ass motherf*cker skrt what's good")
+    bot.polling()   
