@@ -1,4 +1,4 @@
-"""
+"""Add report to database of the data seen today.
 """
 from datetime import date, datetime
 import re
@@ -122,13 +122,13 @@ def build_raport(freq_table: dict) -> dict:
         "description": "A summary of the amount of times a crytpocurrency has been mentioned in a tweet in the focus group.",
         "interval": "daily",
         "date": datetime.today().strftime('%Y-%m-%d'),
-        "data": data_object
+        "data": dict(sorted(data_object.items(), key=lambda item: item[1]), reversed=True)
     }
     return raport
 
 
 @update_daily_report.task(depends_on=build_raport)
-def insert_list_into_db(input_raport: List[dict], update_all:bool = False) -> None:
+def insert_list_into_db(input_raport: List[dict]) -> None:
     print("getting a fresh list.")
 
     daily_raport = mongodb.select_one({"date": datetime.today().strftime('%Y-%m-%d')}, collection_name='raports')
