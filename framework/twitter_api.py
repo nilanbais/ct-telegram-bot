@@ -1,7 +1,7 @@
 """https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/introduction
 """
 from framework.framework_utils.env_reader import EnvVarReader
-from framework.interface.api_interface import AbstractAPI
+from framework.api.api_interface import AbstractAPI
 from framework.framework_utils.string_utils import CustomFormatter, var_name_from_name_str
 from framework.framework_utils.file_reader import read_json_file
 

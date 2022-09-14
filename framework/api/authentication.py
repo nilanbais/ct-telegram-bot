@@ -2,7 +2,7 @@ import os
 from typing import Union
 from abc import ABC, abstractmethod
 from framework.framework_utils.env_reader import EnvVarReader
-from framework.interface.api_interface import AbstractAPI
+from framework.api.api_interface import AbstractAPI
 
 from framework.framework_utils.code_utils import get_authentication_variable, get_api_config_variable, clean_api_name_string
 from framework.framework_utils.string_utils import var_name_from_name_str

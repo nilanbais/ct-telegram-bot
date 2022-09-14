@@ -5,7 +5,7 @@ import requests
 
 from framework.api.authentication import Authenticator
 from framework.api.exceptions import APIExceptions
-from framework.interface.api_interface import AbstractAPI
+from framework.api.api_interface import AbstractAPI
 
 
 class APICommunicator:
