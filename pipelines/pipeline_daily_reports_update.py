@@ -57,6 +57,7 @@ def get_a_fresh_list() -> List[dict]:
 
 @update_daily_report.task()
 def get_users_in_db() -> List[dict]:
+    print("Getting the users from the database.")
     mongo_query = {}
     _result = mongodb.select_many(mongo_query, database_name='cta-database', collection_name='users')
     return [obj["id"] for obj in _result]
@@ -65,6 +66,7 @@ def get_users_in_db() -> List[dict]:
 
 @update_daily_report.task(depends_on=get_users_in_db)
 def get_symbolcount_per_user(input_list: List[dict]) -> List[dict]:
+    print("Counting the crypto symbols metioned per user")
     api = APICommunicator(TwitterAPI())
     header = {"User-Agent": "v2UserTweetsPython"}
     qp = {"tweet.fields": "created_at"}
@@ -88,6 +90,7 @@ def get_symbolcount_per_user(input_list: List[dict]) -> List[dict]:
 @update_daily_report.task(depends_on=get_symbolcount_per_user)
 def merge_freq_tables(freq_tables: Dict) -> dict:
     """"""
+    print("Going to merge the counts from previous task")
     the_table_of_all_tables = dict()
     for table in freq_tables.values():
         for key, value in table.items():
@@ -98,16 +101,16 @@ def merge_freq_tables(freq_tables: Dict) -> dict:
                 the_table_of_all_tables[key] = value
     return the_table_of_all_tables
 
+
 def get_currency_name(symbol: str, search_list: List[dict]) -> Optional[str]:
     for item in search_list:
         if item["symbol"] == symbol:
             return item["name"]
 
 
-
 @update_daily_report.task(depends_on=merge_freq_tables)
 def build_raport(freq_table: dict) -> dict:
-    print("getting a fresh list.")
+    print("Building the raport")
     fresh_symbol_summary = get_a_fresh_list()
     data_object = dict()
     for key, value in freq_table.items():
@@ -129,8 +132,7 @@ def build_raport(freq_table: dict) -> dict:
 
 @update_daily_report.task(depends_on=build_raport)
 def insert_list_into_db(input_raport: List[dict]) -> None:
-    print("getting a fresh list.")
-
+    print("Going to bring a fresh fresh result to the database")
     daily_raport = mongodb.select_one({"date": datetime.today().strftime('%Y-%m-%d')}, collection_name='raports')
     if daily_raport is not None:
         print("gonna update the data")

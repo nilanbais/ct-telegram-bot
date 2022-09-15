@@ -31,6 +31,7 @@ DAYS_TO_EXTRACT = [(datetime.today() - timedelta(days=x)).strftime('%Y-%m-%d') f
 def get_data_from_db() -> list:
     """gets data of the past 7 days
     """
+    print("Getting the last 7 daily report from the database")
     daily_raports = mongodb.select_many({"date": {"$in": DAYS_TO_EXTRACT}}, collection_name='raports')
     return daily_raports
 
@@ -38,6 +39,7 @@ def get_data_from_db() -> list:
 def build_raport(mongo_cursor: Cursor) -> dict:
     """sums the data in the queried documents
     """
+    print("Raport under construction. Please put on your helmet")
     week_data = dict()
     for record in mongo_cursor:
         _data = record['data']
@@ -58,7 +60,7 @@ def build_raport(mongo_cursor: Cursor) -> dict:
 
 @update_week_sum.task(depends_on=build_raport)
 def insert_list_into_db(input_raport: List[dict]) -> None:
-    print("getting a fresh list.")
+    print("Going to bring an updated weekly summary to the database")
     query = {"name": "Weekly Summary"}
     weekly_raport = mongodb.select_one(query, collection_name='raports')
     if weekly_raport is not None:
@@ -74,7 +76,6 @@ def insert_list_into_db(input_raport: List[dict]) -> None:
         mongodb.insert_one(input_raport, collection_name='raports')
     
     print("done")
-
     
 
 update_week_sum.run()
