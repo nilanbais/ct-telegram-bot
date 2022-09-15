@@ -122,7 +122,7 @@ def build_raport(freq_table: dict) -> dict:
         "description": "A summary of the amount of times a crytpocurrency has been mentioned in a tweet in the focus group.",
         "interval": "daily",
         "date": datetime.today().strftime('%Y-%m-%d'),
-        "data": dict(sorted(data_object.items(), key=lambda item: item[1]), reversed=True)
+        "data": dict(sorted(data_object.items(), key=lambda item: item[1], reverse=True))
     }
     return raport
 
