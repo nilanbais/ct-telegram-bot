@@ -1,4 +1,5 @@
 # path seen from project root
+# put MAILTO=<email> to get email when error
 
 # run daily pipelines
 30 00 * * * ct-telegram-bot/pipelines/pipeline_daily_reports_update.py
