@@ -1,4 +1,6 @@
 """Add report to database of the data seen today.
+Schedule: daily
+
 """
 from datetime import date, datetime
 import re
@@ -15,6 +17,7 @@ from framework.database import MongoDBConnection, MongoDBCursor
 
 from framework.text_analysis import CRYPTO_SYMBOL_REGEX_PATTERN
 from framework.twitter_api import TwitterAPI
+from framework.framework_utils.env_reader import RAPORTS_COLLECTION, USERS_COLLECTION
 
 
 
@@ -59,7 +62,7 @@ def get_a_fresh_list() -> List[dict]:
 def get_users_in_db() -> List[dict]:
     print("Getting the users from the database.")
     mongo_query = {}
-    _result = mongodb.select_many(mongo_query, database_name='cta-database', collection_name='users')
+    _result = mongodb.select_many(mongo_query, database_name='cta-database', collection_name=USERS_COLLECTION)
     return [obj["id"] for obj in _result]
 
 
@@ -133,17 +136,17 @@ def build_raport(freq_table: dict) -> dict:
 @update_daily_report.task(depends_on=build_raport)
 def insert_list_into_db(input_raport: List[dict]) -> None:
     print("Going to bring a fresh fresh result to the database")
-    daily_raport = mongodb.select_one({"date": datetime.today().strftime('%Y-%m-%d')}, collection_name='raports')
+    daily_raport = mongodb.select_one({"date": datetime.today().strftime('%Y-%m-%d')}, collection_name=RAPORTS_COLLECTION)
     if daily_raport is not None:
         print("gonna update the data")
         query = {"date": daily_raport["date"]}
         update_query = {"$set": {
             "data": input_raport["data"]
         }}
-        mongodb.update_one(query=[query, update_query], collection_name='raports')
+        mongodb.update_one(query=[query, update_query], collection_name=RAPORTS_COLLECTION)
     else:
         print("nothing found. dump it br")
-        mongodb.insert_one(input_raport, collection_name='raports')
+        mongodb.insert_one(input_raport, collection_name=RAPORTS_COLLECTION)
     
     print("done")
 

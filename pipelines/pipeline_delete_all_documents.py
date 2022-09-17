@@ -1,6 +1,7 @@
-
-
-
+"""
+Utils pipeline used in development.
+Schedule: never. Execution is only manual.
+"""
 
 from tkinter import Y
 import context

@@ -2,9 +2,10 @@ from typing import List
 
 from datetime import datetime
 
+from framework.framework_utils.env_reader import EnvVarReader
 
 
-__RFC3339_format = "%Y-%m-%dT%H:%M:%S.000Z"
+__RFC3339_format = EnvVarReader().get_value('TWITTER_API_TIME_FORMAT')
     
 
 def get_RFC_timestamp(dt_object: datetime):

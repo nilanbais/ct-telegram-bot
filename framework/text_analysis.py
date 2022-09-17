@@ -1,7 +1,12 @@
+"""
+Collection of all the functionality focussed on text analysis.
+"""
 import textblob
 
+from framework.framework_utils.env_reader import EnvVarReader
 
-CRYPTO_SYMBOL_REGEX_PATTERN = "(\$[A-Z]+)"
+
+CRYPTO_SYMBOL_REGEX_PATTERN = EnvVarReader().get_value('BOT_CRYPTO_SYMBOL_REGEX_PATTERN')
 
 
 def get_sentiment_score(input_text: str) -> dict:

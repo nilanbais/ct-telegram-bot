@@ -20,21 +20,11 @@ class CustomFormatter(Formatter):
             return Formatter.get_value(key, args, kwds)
 
 
-def var_name_from_name_str(name_sting: str, usage: str) -> str:
+
+def var_name_from_name_str(name_string: str, usage: str) -> str:
     """function to return clean api string.
         usage specifies for which goal the string needs to be cleaned.
     """
-    __string = str.upper(name_sting)
-    __string = __string.replace("-", "_").replace(" ", "_")
-    if usage == 'api-key':
-        return "API_KEY_" + __string
-    elif usage == 'bearer-token':
-        return 'API_BEARER_TOKEN_' + __string
-    elif usage == 'endpoints':
-        return __string
-
-
-def var_name_from_name_string(name_string: str, usage: str) -> str:
     __string = str.upper(name_string)
     __string = __string.replace("-", "_").replace(" ", "_")
     match usage:

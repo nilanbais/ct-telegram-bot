@@ -5,8 +5,15 @@ from abc import ABC
 
 import dotenv
 
+from framework.framework_utils.env_reader import EnvVarReader
 
-PROJECT_NAME = 'ct-telegram-bot'
+
+PROJECT_NAME = EnvVarReader().get_value('BOT_GIT_PROJECT_NAME')
+
+USERS_COLLECTION = EnvVarReader().get_value('DB_USERS_COLLECTION')
+CRYPTO_COLLECTION = EnvVarReader().get_value('DB_CRYPTO_COLLECTION')
+RAPORTS_COLLECTION = EnvVarReader().get_value('DB_RAPORTS_COLLECTION')
+
 
 def get_project_root(os_cwd: str) -> str:
     splitted_path = os_cwd.split('\\' or '/')
@@ -81,11 +88,12 @@ class EnvVarReader:
 
     def _get_reader_object(self, variable_name: str) -> VarReaderBase:
         var_prefix = variable_name.split("_")[0]
-        if var_prefix.lower() == 'bot':
-            return BotVarReader()
-        elif var_prefix.lower() == 'db':
-            return DBVarReader()
-        elif var_prefix.lower() == 'api':
-            return APIVarReader()
-        elif var_prefix.lower() == 'twitter':
-            return TwitterVarReader()
+        match var_prefix.lower():
+            case 'bot':
+                return BotVarReader()
+            case 'db':
+                return DBVarReader()
+            case 'api':
+                return APIVarReader()
+            case 'twitter':
+                return TwitterVarReader()

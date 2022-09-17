@@ -3,10 +3,6 @@ import os
 import json
 
 
-
-from framework.framework_utils.env_reader import EnvVarReader
-
-
 def read_json_file(json_file: str, path_to_file: str = "") -> dict:
     """Function to read the content of a json file.
         Optional: you can insert filpath as the file or split the file name and the path to file

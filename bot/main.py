@@ -19,6 +19,10 @@ mongodb = MongoDBCursor(MongoDBConnection())
 
 API_TOKEN = EnvVarReader().get_value('BOT_HTTP_TOKEN')
 
+USERS_COLLECTION = EnvVarReader().get_value('DB_USERS_COLLECTION')
+CRYPTO_COLLECTION = EnvVarReader().get_value('DB_CRYPTO_COLLECTION')
+REPORTS_COLLECTION = EnvVarReader().get_value('DB_RAPORTS_COLLECTION')
+
 bot = telebot.TeleBot(token=API_TOKEN)
 
 @bot.message_handler(commands=['start'])
@@ -48,7 +52,7 @@ def help(message):
 
 @bot.message_handler(commands=['today'])
 def today(message):
-    raw_data = mongodb.select_one(mongodb_query={"date": datetime.today().strftime('%Y-%m-%d')}, collection_name='raports')
+    raw_data = mongodb.select_one(mongodb_query={"date": datetime.today().strftime('%Y-%m-%d')}, collection_name=REPORTS_COLLECTION)
     data = {key: value for key, value in raw_data.items() if key != '_id'}
     newline = '\n'
     tab = '\t'
@@ -71,7 +75,7 @@ tenk U come again
 @bot.message_handler(commands=['yesterday'])
 def yesterday(message):
     yesterday_date = datetime.today() - timedelta(days=1)
-    raw_data = mongodb.select_one(mongodb_query={"date": yesterday_date.strftime('%Y-%m-%d')}, collection_name='raports')
+    raw_data = mongodb.select_one(mongodb_query={"date": yesterday_date.strftime('%Y-%m-%d')}, collection_name=REPORTS_COLLECTION)
     data = {key: value for key, value in raw_data.items() if key != '_id'}
     newline = '\n'
     tab = '\t'
@@ -94,7 +98,7 @@ tenk U come again
 
 @bot.message_handler(commands=['last_week'])
 def last_week(message):
-    raw_data = mongodb.select_one(mongodb_query={"name": "Weekly Summary"}, collection_name='raports')
+    raw_data = mongodb.select_one(mongodb_query={"name": "Weekly Summary"}, collection_name=REPORTS_COLLECTION)
     data = {key: value for key, value in raw_data.items() if key != '_id'}
     newline = '\n'
     tab = '\t'
@@ -117,4 +121,4 @@ Thank you come again
 
 if __name__ == '__main__':
     print("crypto_twitter_analysis_bot OUT NOW go to telegram to chat with the one and only best there is crypto bot for things you know I know so let's stop talking and go get this goldendrop on a tuesday morning type ass motherf*cker skrt what's good")
-    bot.polling()   
+    bot.polling()

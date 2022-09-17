@@ -1,3 +1,7 @@
+"""
+Script to update the list of users in the database.
+There is not yet a concrete strategy to manage the users in the database.
+"""
 from typing import List
 from pprint import pprint
 
@@ -7,6 +11,8 @@ from framework.pipeline import Pipeline
 from framework.twitter_api import TwitterAPI
 from framework.api.communication import APICommunicator
 from framework.database import MongoDBConnection, MongoDBCursor
+from framework.framework_utils.env_reader import RAPORTS_COLLECTION
+
 
 
 
@@ -47,10 +53,10 @@ def print_result(input_data):
 @pipeline.task(depends_on=clean_list)
 def insert_list_into_db(input_list: List[dict]) -> None:
 
-    if mongodb.select_one({}, collection_name='users') is None:
+    if mongodb.select_one({}, collection_name=RAPORTS_COLLECTION) is None:
         print("going for insert")
         
-        mongodb.insert_many(documents=input_list, database_name='cta-database', collection_name='users')
+        mongodb.insert_many(documents=input_list, database_name='cta-database', collection_name=RAPORTS_COLLECTION)
 
     else:
         print("going for update")
@@ -60,13 +66,13 @@ def insert_list_into_db(input_list: List[dict]) -> None:
             item = que[-1]
             query = {"name": item['name']}
             replace_val = {"$set": item}
-            mongodb.update_one(query=(query, replace_val), collection_name='users')
+            mongodb.update_one(query=(query, replace_val), collection_name=RAPORTS_COLLECTION)
             que.pop()
             print(len(que))
         
         if len(que) > 0:
             print("going for aditional insert")
-            mongodb.insert_many(documents=que, database_name='cta-database', collection_name='users')
+            mongodb.insert_many(documents=que, database_name='cta-database', collection_name=RAPORTS_COLLECTION)
 
     print("done")
 

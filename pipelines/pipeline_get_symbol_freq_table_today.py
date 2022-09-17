@@ -8,14 +8,12 @@ from typing import List, Dict
 from pprint import pprint
 
 import context
-from framework.framework_utils.string_utils import check_for_char
-
 from framework.pipeline import Pipeline
-from framework.coinmarketcap_api import CoinMarketCapAPI
 from framework.twitter_api import TwitterAPI
 from framework.api.communication import APICommunicator
 from framework.database import MongoDBConnection, MongoDBCursor
 from framework.text_analysis import CRYPTO_SYMBOL_REGEX_PATTERN
+from framework.framework_utils.env_reader import EnvVarReader, RAPORTS_COLLECTION
 
 
 api = APICommunicator(TwitterAPI())
@@ -43,7 +41,7 @@ def get_symbol_freq_table(input_list: List[list]) -> dict:
 @symbols_freq_table_today_pipeline.task()
 def get_users_in_db() -> List[dict]:
     mongo_query = {}
-    _result = mongodb.select_many(mongo_query, database_name='cta-database', collection_name='users')
+    _result = mongodb.select_many(mongo_query, database_name=EnvVarReader().get_value("DB_NAME"), collection_name=RAPORTS_COLLECTION)
     return [obj["id"] for obj in _result]
 
 
