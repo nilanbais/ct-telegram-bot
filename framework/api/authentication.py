@@ -4,9 +4,7 @@ from abc import ABC, abstractmethod
 from framework.framework_utils.env_reader import EnvVarReader
 from framework.api.api_interface import AbstractAPI
 
-from framework.framework_utils.code_utils import get_authentication_variable, get_api_config_variable, clean_api_name_string
 from framework.framework_utils.string_utils import var_name_from_name_str
-from framework.exception_handling import no_none_values
 
 
 # Base Class
@@ -73,14 +71,15 @@ class Authenticator:
     def __get_authentication_object(self, implemented_api: AbstractAPI) -> AuthenticationBase:
         """Secret method to set the authentication object based on the authentication type specified in the implemented api"""
         # get specific authentication object
-        if implemented_api.authentication_type == 'rapid_api':
-            # get name of env key var of the api
-            __key_var_name = var_name_from_name_str(name_sting=implemented_api.name, usage='api-key')
-            return RapidApiAuth(__key_var_name)
-        elif implemented_api.authentication_type == 'bearer_token':
-            # get name of env key var of the api
-            __key_var_name = var_name_from_name_str(name_sting=implemented_api.name, usage='bearer-token')
-            return BearerOAuth(__key_var_name)
-        elif implemented_api.authentication_type == 'api_key_header':
-            __key_var_name = var_name_from_name_str(name_sting=implemented_api.name, usage='api-key')
-            return ApiKeyHeaderAuth(__key_var_name)
+        match implemented_api.authentication_type:
+            case 'rapid_api':
+                # get name of env key var of the api
+                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='api-key')
+                return RapidApiAuth(__key_var_name)
+            case 'bearer_token':
+                # get name of env key var of the api
+                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='bearer-token')
+                return BearerOAuth(__key_var_name)
+            case 'api_key_header':
+                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='api-key')
+                return ApiKeyHeaderAuth(__key_var_name)
