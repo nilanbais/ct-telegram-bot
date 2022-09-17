@@ -1,0 +1,11 @@
+# path seen from project root
+
+# run daily pipelines
+30 00 * * * ct-telegram-bot/pipelines/pipeline_daily_reports_update.py
+40 00 * * * ct-telegram-bot/pipelines/pipeline_week_sum_reports_update.py
+
+# run weekly pipelines
+10 00 * * Mon ct-telegram-bot/pipelines/pipeline_add_new_weekly.py
+
+# run monthly pipelines
+10 00 * 1 * ct-telegram-bot/pipelines/pipeline_add_new_monthly.py
