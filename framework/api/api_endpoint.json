@@ -1,0 +1,13 @@
+{
+    "TWITTER": {
+        "user_tweets": "https://api.twitter.com/2/users/{USER_ID}/tweets",
+        "followers": "https://api.twitter.com/2/users/{USER_ID}/followers",
+        "following": "https://api.twitter.com/2/users/{USER_ID}/following"
+    },
+    "COINMARKETCAP": {
+        "coin_categories": "https://pro-api.coinmarketcap.com/v1/cryptocurrency/categories",
+        "idmap": "https://pro-api.coinmarketcap.com/v1/cryptocurrency/map",
+        "metadata": "https://pro-api.coinmarketcap.com/v1/cryptocurrency/info",
+        "latest_listings": "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
+    }
+}

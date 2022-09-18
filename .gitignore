@@ -1,3 +1,14 @@
 # Environment stuff
 env
+.env
 venv
+
+
+# Cache
+__pycache__
+
+# docker stuff
+pgpass
+servers.json
+data
+.png

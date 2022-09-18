@@ -1,0 +1,7 @@
+dnspython
+pip-chill
+psycopg2
+pymongo
+pytelegrambotapi
+python-dotenv
+textblob

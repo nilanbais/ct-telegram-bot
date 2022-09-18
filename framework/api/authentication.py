@@ -1,73 +1,85 @@
-
+import os
 from typing import Union
 from abc import ABC, abstractmethod
-from  interfaces.api_interface import AbstractAPI
+from framework.framework_utils.env_reader import EnvVarReader
+from framework.api.api_interface import AbstractAPI
 
-from source_utils.code_utils import get_authentication_variable, get_api_config_variable, clean_api_name_string
-from exceptions_handling import no_none_values
+from framework.framework_utils.string_utils import var_name_from_name_str
 
 
-class AbstractAuthenticationObject(ABC):
+# Base Class
+class AuthenticationBase(ABC):
 
     @abstractmethod
-    def get_authed_header(self, header) -> dict:
-        """Method to return an authenticated header"""
+    def autherise_object(self, implemented_api: AbstractAPI) -> AbstractAPI:
+        """getter for the autherised object"""
 
 
-class BearerOAuth(AbstractAuthenticationObject):
-
-    def __init__(self, authentication_token_name) -> None:
-        self.authentication_token_name = authentication_token_name
-
-    def get_authed_header(self, header: dict) -> dict:
-        """Returns a header with the correct authentication bearer token."""
-        header_oath = header.copy()  # Copy to make sure the token isn't added to the header attribute
-        header_oath["Authorization"] = "Bearer {}".format(get_authentication_variable(variable_name=self.authentication_token_name))
-        return header_oath
-
-
-class ApiKeyAuth(AbstractAuthenticationObject):
+# Concrete Classes
+class BearerOAuth(AuthenticationBase):
 
     def __init__(self, authentication_token_name) -> None:
-        self.authentication_token_name = authentication_token_name
+        self._authentication_token_name = authentication_token_name
 
-    def get_authed_header(self, header: dict) -> dict:
-        """Returns a header with the correct authentication key, val pair."""
-        header_auth = header.copy()
-        header_auth["X-CMC_PRO_API_KEY"] = get_authentication_variable(variable_name=self.authentication_token_name)
-        return header_auth
+    def autherise_object(self, implemented_api: AbstractAPI) -> AbstractAPI:
+        """Returns an object with the correct authentication bearer token."""
+        header_oath = implemented_api.header  # Copy to make sure the token isn't added to the header attribute
+        header_oath["Authorization"] = "Bearer {}".format(EnvVarReader().get_value(variable_name=self._authentication_token_name))
+        implemented_api.header = header_oath
+        return implemented_api
 
 
-class RapidApiAuth(AbstractAuthenticationObject):
+class ApiKeyHeaderAuth(AuthenticationBase):
 
     def __init__(self, authentication_token_name: str) -> None:
-        self.authentication_token_name = authentication_token_name
+        self._authentication_token_name = authentication_token_name    
 
-    def get_authed_header(self, header: dict) -> dict:
-        work_header = header.copy()
-        work_header["X-RapidAPI-Key"] = get_authentication_variable(variable_name=self.authentication_token_name)
-        return work_header
-
-
-def __get_auth_object(implemented_api: AbstractAPI) -> AbstractAuthenticationObject:
-    """ """
-    # check if the value is not None
-    no_none_values(auth_type=implemented_api.authentication_type)
-    # get name of env key var of the api
-    __key_var_name = clean_api_name_string(name_sting=implemented_api.name, usage='api-key')
-    # get specific authentication object
-    if implemented_api.authentication_type == 'rapid_api':
-        return RapidApiAuth(__key_var_name)
+    def autherise_object(self, implemented_api: AbstractAPI) -> AbstractAPI:
+        """Returns an object with the correct authentication bearer token."""
+        header_oath = implemented_api.header  # Copy to make sure the token isn't added to the header attribute
+        header_oath["X-CMC_PRO_API_KEY"] = EnvVarReader().get_value(variable_name=self._authentication_token_name)
+        implemented_api.header = header_oath
+        return implemented_api
 
 
+
+class RapidApiAuth(AuthenticationBase):
+
+    def __init__(self, authentication_token_name: str) -> None:
+        self._authentication_token_name = authentication_token_name    
+
+    def autherise_object(self, implemented_api: AbstractAPI) -> AbstractAPI:
+        """Returns an object with the correct authentication bearer token."""
+        header_oath = implemented_api.header  # Copy to make sure the token isn't added to the header attribute
+        header_oath["X-RapidAPI-Key"] = EnvVarReader().get_value(variable_name=self._authentication_token_name)
+        implemented_api.header = header_oath
+        return implemented_api
+
+
+
+
+# Director
 class Authenticator:
 
     def __init__(self, implemented_api: AbstractAPI) -> None:
-        self.__authentication_object: AbstractAuthenticationObject = __get_auth_object(authentication_type=implemented_api.authentication_type)
+        self.__authentication_object: AuthenticationBase = self.__get_authentication_object(implemented_api)
+    
+    def autherise_object(self, input_object: AbstractAPI) -> AbstractAPI:
+        return self.__authentication_object.autherise_object(input_object)
+        
 
-    def get_authorised_header(self, header: dict) -> dict:
-        """Method to auterise the header.
-            Returns dict with the correct autherization, based on the needed autherisation.
-        """
-        authed_header = self.__authentication_object.get_authed_header(header)
-        return authed_header
+    def __get_authentication_object(self, implemented_api: AbstractAPI) -> AuthenticationBase:
+        """Secret method to set the authentication object based on the authentication type specified in the implemented api"""
+        # get specific authentication object
+        match implemented_api.authentication_type:
+            case 'rapid_api':
+                # get name of env key var of the api
+                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='api-key')
+                return RapidApiAuth(__key_var_name)
+            case 'bearer_token':
+                # get name of env key var of the api
+                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='bearer-token')
+                return BearerOAuth(__key_var_name)
+            case 'api_key_header':
+                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='api-key')
+                return ApiKeyHeaderAuth(__key_var_name)
