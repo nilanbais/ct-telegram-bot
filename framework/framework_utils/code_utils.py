@@ -2,10 +2,6 @@
 All utility type functionalities collected in one place
 """
 from datetime import datetime
-import os
-from typing import Union
-
-import dotenv
 
 
 date_format = '%Y-%m-%d'
