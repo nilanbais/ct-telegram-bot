@@ -71,15 +71,14 @@ class Authenticator:
     def __get_authentication_object(self, implemented_api: AbstractAPI) -> AuthenticationBase:
         """Secret method to set the authentication object based on the authentication type specified in the implemented api"""
         # get specific authentication object
-        match implemented_api.authentication_type:
-            case 'rapid_api':
-                # get name of env key var of the api
-                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='api-key')
-                return RapidApiAuth(__key_var_name)
-            case 'bearer_token':
-                # get name of env key var of the api
-                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='bearer-token')
-                return BearerOAuth(__key_var_name)
-            case 'api_key_header':
-                __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='api-key')
-                return ApiKeyHeaderAuth(__key_var_name)
+        if implemented_api.authentication_type == 'rapid_api':
+            # get name of env key var of the api
+            __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='api-key')
+            return RapidApiAuth(__key_var_name)
+        elif implemented_api.authentication_type == 'bearer_token':
+            # get name of env key var of the api
+            __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='bearer-token')
+            return BearerOAuth(__key_var_name)
+        elif implemented_api.authentication_type == 'api_key_header':
+            __key_var_name = var_name_from_name_str(name_string=implemented_api.name, usage='api-key')
+            return ApiKeyHeaderAuth(__key_var_name)

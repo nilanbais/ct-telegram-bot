@@ -4,8 +4,6 @@ import pymongo
 from pymongo import MongoClient
 from pymongo.database import Database, Collection
 
-import psycopg2
-
 from framework.framework_utils.env_reader import EnvVarReader
 
 

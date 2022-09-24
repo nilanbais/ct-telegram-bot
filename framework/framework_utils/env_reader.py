@@ -79,16 +79,15 @@ class EnvVarReader:
         return reader_object.get_value(variable_name)
 
     def _get_reader_object(self, variable_name: str) -> VarReaderBase:
-        var_prefix = variable_name.split("_")[0]
-        match var_prefix.lower():
-            case 'bot':
-                return BotVarReader()
-            case 'db':
-                return DBVarReader()
-            case 'api':
-                return APIVarReader()
-            case 'twitter':
-                return TwitterVarReader()
+        _var_prefix = variable_name.split("_")[0]
+        if _var_prefix.lower() == 'bot':
+            return BotVarReader()
+        elif _var_prefix.lower() == 'db':
+            return DBVarReader()
+        elif _var_prefix.lower() == 'api':
+            return APIVarReader()
+        elif _var_prefix.lower() == 'twitter':
+            return TwitterVarReader()
 
 
 USERS_COLLECTION = EnvVarReader().get_value('DB_USERS_COLLECTION')

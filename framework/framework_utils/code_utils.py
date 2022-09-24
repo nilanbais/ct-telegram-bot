@@ -13,13 +13,12 @@ def clean_api_name_string(name_sting: str, usage: str) -> str:
     """
     __string = str.upper(name_sting)
     __string = __string.replace("_", "")
-    match usage:   
-        case 'authenticatation':
-            return __string + "_AUTH_TYPE"
-        case 'api-key':
-            return __string + "API_KEY"
-        case 'api-host':
-            return __string + "API_HOST"
+    if usage == 'authenticatation':
+        return __string + "_AUTH_TYPE"
+    elif usage == 'api-key':
+        return __string + "API_KEY"
+    elif usage == 'api-host':
+        return __string + "API_HOST"
 
 
 def get_date_str(input_date: datetime) -> str:

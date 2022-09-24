@@ -1,0 +1,10 @@
+What is up. I've got one daily report for you, my friend
+
+--------------------
+{NAME}
+{DESCRIPTION}
+The date is {DATE}
+
+{BODY}
+
+Thank you come again

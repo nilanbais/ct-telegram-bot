@@ -27,13 +27,12 @@ def var_name_from_name_str(name_string: str, usage: str) -> str:
     """
     __string = str.upper(name_string)
     __string = __string.replace("-", "_").replace(" ", "_")
-    match usage:
-        case 'api-key':
-            return "API_KEY_" + __string
-        case 'bearer-token':
-            return 'API_BEARER_TOKEN_' + __string
-        case 'endpoints':
-            return __string
+    if usage == 'api-key':
+        return "API_KEY_" + __string
+    elif usage == 'bearer-token':
+        return 'API_BEARER_TOKEN_' + __string
+    elif usage == 'endpoints':
+        return __string
 
         
 def check_for_char(input_string: str, character: str) -> bool:
