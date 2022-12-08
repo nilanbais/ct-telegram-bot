@@ -68,7 +68,6 @@ def insert_list_into_db(input_list: List[dict]) -> None:
             replace_val = {"$set": item}
             mongodb.update_one(query=(query, replace_val), collection_name=RAPORTS_COLLECTION)
             que.pop()
-            print(len(que))
         
         if len(que) > 0:
             print("going for aditional insert")

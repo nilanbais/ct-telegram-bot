@@ -13,7 +13,7 @@ from framework.twitter_api import TwitterAPI
 from framework.api.communication import APICommunicator
 from framework.database import MongoDBConnection, MongoDBCursor
 from framework.text_analysis import CRYPTO_SYMBOL_REGEX_PATTERN
-from framework.framework_utils.env_reader import EnvVarReader, RAPORTS_COLLECTION
+from framework.framework_utils.env_reader import EnvVarReader, RAPORTS_COLLECTION, USERS_COLLECTION
 
 
 api = APICommunicator(TwitterAPI())
@@ -41,7 +41,7 @@ def get_symbol_freq_table(input_list: List[list]) -> dict:
 @symbols_freq_table_today_pipeline.task()
 def get_users_in_db() -> List[dict]:
     mongo_query = {}
-    _result = mongodb.select_many(mongo_query, database_name=EnvVarReader().get_value("DB_NAME"), collection_name=RAPORTS_COLLECTION)
+    _result = mongodb.select_many(mongo_query, database_name=EnvVarReader().get_value("DB_DEFAULT_DATABASE"), collection_name=USERS_COLLECTION)
     return [obj["id"] for obj in _result]
 
 

@@ -56,7 +56,8 @@ class TwitterAPI(AbstractAPI):
         if "user_id" in kwargs.keys():
             self.url = CustomFormatter().format(self.url, **{"USER_ID": kwargs['user_id']})
         else:
-            self.url.format(self._get_user_id())
+            # self.url.format(self._get_user_id())
+            self.url = CustomFormatter().format(self.url, **{"USER_ID": self._get_user_id()})
 
         self.header = header_kwargs
         self.query_parameters = query_parameters_kwargs
